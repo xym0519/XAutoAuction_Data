@@ -1,0 +1,8 @@
+## Interface: 40400
+## Version: 1.0.0
+## Title: XAutoAuction_Data
+## Author: Broche
+## Notes: 自动拍卖数据(V3)
+## SavedVariables: XAuctionInfoList, XPostalList, XAuctionatorBuyList, XAuctionatorSellList, XAuctionatorScanList
+
+XUtils.lua
