@@ -4,5 +4,3 @@
 ## Author: Broche
 ## Notes: 自动拍卖数据(V3)
 ## SavedVariables: XAuctionInfoList, XPostalList, XAuctionatorBuyList, XAuctionatorSellList, XAuctionatorScanList
-
-XUtils.lua
