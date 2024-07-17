@@ -3,4 +3,6 @@
 ## Title: XAutoAuction_Data
 ## Author: Broche
 ## Notes: 自动拍卖数据(V3)
-## SavedVariables: XAuctionInfoList, XPostalList, XAuctionatorBuyList, XAuctionatorSellList, XAuctionatorScanList
+## SavedVariables: XAuctionInfoList, XAuctionInfoListImport, XBuyList, XBuyExport, XSellList, XSellExport, XScanList, XScanExport
+
+XAutoAuction_Data.lua
