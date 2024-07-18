@@ -12,10 +12,35 @@ XSellExport = ''
 XScanList = {}
 XScanExport = ''
 
-local function import()
-    -- if XAuctionInfoListImport ~= nil and XAuctionInfoListImport ~= '' then
+local function parseAuctionInfoObject(jsonStr)
+    -- itemname, category, group
+    local item = {}
+    for k, v in jsonStr:gmatch('"([^"]+)":"([^"]*)"') do
+        if k ~= 'itemname' and k ~= 'category' and k ~= 'group' then
+            item[k] = tonumber(v)
+        else
+            item[k] = v
+        end
+    end
+    return item
+end
 
-    -- end
+local function import()
+    if XAuctionInfoListImport ~= nil and XAuctionInfoListImport ~= '' then
+        local results = {}
+
+        -- 去除数组括号
+        local jsonStr = string.sub(XAuctionInfoListImport, 2, -2)
+        local count = 0
+        for objectStr in jsonStr:gmatch("{(.-)}") do
+            local obj = parseAuctionInfoObject(objectStr)
+            results[obj['itemname']] = obj
+            count = count + 1
+        end
+        XAuctionInfoList = results
+        print('----------XAuctionInfoList----------')
+        print(count .. ' items loaded.')
+    end
 end
 
 local function export()
