@@ -16,7 +16,7 @@ local function parseAuctionInfoObject(jsonStr)
     -- itemname, category, group
     local item = {}
     for k, v in jsonStr:gmatch('"([^"]+)":"([^"]*)"') do
-        if k ~= 'itemname' and k ~= 'category' and k ~= 'group' then
+        if k ~= 'itemname' and k ~= 'category' and k ~= 'class' and k ~= 'group' then
             item[k] = tonumber(v)
         else
             item[k] = v
@@ -38,6 +38,7 @@ local function import()
             count = count + 1
         end
         XAuctionInfoList = results
+        XAuctionInfoListImport = ''
         print('----------XAuctionInfoList----------')
         print(count .. ' items loaded.')
     end
