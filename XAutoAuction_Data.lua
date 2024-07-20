@@ -75,7 +75,9 @@ local function export()
                 table.insert(listJsonList, format('{"time":%s,"price":%s}', record.time, record.price))
             end
             table.insert(scanJsonList,
-                format('"%s":{"timestamp":%s, "list":[%s]}', itemName, item.timestamp, table.concat(listJsonList, ',')))
+                format('"%s":{"timestamp":%s,"itemid":%s,"vendorprice":%s,"category":"%s","class":"%s","list":[%s]}',
+                    itemName, item.timestamp, item.itemid, item.vendorprice, item.category, item.class,
+                    table.concat(listJsonList, ',')))
         end
         XScanExport = format('{%s}', table.concat(scanJsonList, ','))
         XScanList = {}
