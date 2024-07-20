@@ -5,6 +5,9 @@ local moduleName = 'XAutoAuctionData'
 XAuctionInfoList = {}
 XAuctionInfoListImport = ''
 
+XItemUpdateList = {}
+XItemUpdateExport = ''
+
 XBuyList = {}
 XBuyExport = ''
 
@@ -47,49 +50,58 @@ local function import()
 end
 
 local function export()
-    if not XBuyExport or XBuyExport == '' then
-        local buyJsonList = {}
+    if not XItemUpdateList or XItemUpdateExport == '' or XItemUpdateExport == '[]' then
+        local list = {}
+        local count = 0
+        for itemName, item in pairs(XItemUpdateList) do
+            table.insert(list,
+                format('{"itemname":"%s","itemid":%s,"vendorprice":%s,"category":"%s","class":"%s"}',
+                    itemName, item.itemid, item.vendorprice, item.category, item.class))
+            count = count + 1
+        end
+        XItemUpdateExport = format('[%s]', table.concat(list, ','))
+        XItemUpdateList = {}
+        print('Export item update: ' .. count)
+    end
+
+    if not XScanExport or XScanExport == '' or XScanExport == '[]' then
+        local list = {}
+        local count = 0
+        for itemName, item in pairs(XScanList) do
+            for _, record in ipairs(item['list']) do
+                table.insert(list, format('{"itemname":"%s","time":%s,"price":%s}', itemName, record.time, record.price))
+                count = count + 1
+            end
+        end
+        XScanExport = format('[%s]', table.concat(list, ','))
+        XScanList = {}
+        print('Export scan history: ' .. count)
+    end
+
+    if not XBuyExport or XBuyExport == '' or XBuyExport == '[]' then
+        local list = {}
         local count = #XBuyList
         for _, item in ipairs(XBuyList) do
-            table.insert(buyJsonList,
+            table.insert(list,
                 format('{"itemname":"%s","time":%s,"price":%s,"count":%s}',
                     item.itemname, item.time, item.price, item.count))
         end
-        XBuyExport = format('[%s]', table.concat(buyJsonList, ','))
+        XBuyExport = format('[%s]', table.concat(list, ','))
         XBuyList = {}
         print('Export buy history: ' .. count)
     end
 
-    if not XSellExport or XSellExport == '' then
-        local sellJsonList = {}
+    if not XSellExport or XSellExport == '' or XSellExport == '[]' then
+        local list = {}
         local count = #XSellList
         for _, item in ipairs(XSellList) do
-            table.insert(sellJsonList,
+            table.insert(list,
                 format('{"itemname":"%s","time":%s,"issuccess":%s,"price":%s,"count":%s}',
                     item.itemname, item.time, item.issuccess and 'true' or 'false', item.price, item.count))
         end
-        XSellExport = format('[%s]', table.concat(sellJsonList, ','))
+        XSellExport = format('[%s]', table.concat(list, ','))
         XSellList = {}
         print('Export sell history: ' .. count)
-    end
-
-    if not XScanExport or XScanExport == '' then
-        local scanJsonList = {}
-        local count = 0
-        for itemName, item in pairs(XScanList) do
-            local listJsonList = {}
-            for _, record in ipairs(item['list']) do
-                table.insert(listJsonList, format('{"time":%s,"price":%s}', record.time, record.price))
-                count = count + 1
-            end
-            table.insert(scanJsonList,
-                format('"%s":{"timestamp":%s,"itemid":%s,"vendorprice":%s,"category":"%s","class":"%s","list":[%s]}',
-                    itemName, item.timestamp, item.itemid, item.vendorprice, item.category, item.class,
-                    table.concat(listJsonList, ',')))
-        end
-        XScanExport = format('{%s}', table.concat(scanJsonList, ','))
-        XScanList = {}
-        print('Export scan history: ' .. count)
     end
 end
 
