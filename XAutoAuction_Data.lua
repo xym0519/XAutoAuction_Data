@@ -21,7 +21,7 @@ local function parseAuctionInfoObject(jsonStr)
     -- itemname, category, group
     local item = {}
     for k, v in jsonStr:gmatch('"([^"]+)":"([^"]*)"') do
-        if k ~= 'itemname' and k ~= 'category' and k ~= 'class' and k ~= 'group' then
+        if k ~= 'itemname' and k ~= 'itemlink' and k ~= 'category' and k ~= 'class' and k ~= 'group' then
             item[k] = tonumber(v)
         else
             item[k] = v
@@ -54,9 +54,18 @@ local function export()
         local list = {}
         local count = 0
         for itemName, item in pairs(XItemUpdateList) do
-            table.insert(list,
-                format('{"itemname":"%s","itemid":%s,"vendorprice":%s,"category":"%s","class":"%s"}',
-                    itemName, item.itemid, item.vendorprice, item.category, item.class))
+            item.itemname = itemName
+            local listFields = {}
+            for k, v in pairs(item) do
+                local vv = v
+                if type(v) == 'boolean' then
+                    if v then vv = 'true' else vv = 'false' end
+                end
+                table.insert(listFields, format('"%s":"%s"', k, vv))
+            end
+
+            table.insert(list, format('{%s}', table.concat(listFields, ',')))
+
             count = count + 1
         end
         XItemUpdateExport = format('[%s]', table.concat(list, ','))
@@ -69,7 +78,17 @@ local function export()
         local count = 0
         for itemName, item in pairs(XScanList) do
             for _, record in ipairs(item['list']) do
-                table.insert(list, format('{"itemname":"%s","time":%s,"price":%s}', itemName, record.time, record.price))
+                record.itemname = itemName
+                local listFields = {}
+                for k, v in pairs(record) do
+                    local vv = v
+                    if type(v) == 'boolean' then
+                        if v then vv = 'true' else vv = 'false' end
+                    end
+                    table.insert(listFields, format('"%s":"%s"', k, vv))
+                end
+
+                table.insert(list, format('{%s}', table.concat(listFields, ',')))
                 count = count + 1
             end
         end
@@ -82,9 +101,16 @@ local function export()
         local list = {}
         local count = #XBuyList
         for _, item in ipairs(XBuyList) do
-            table.insert(list,
-                format('{"itemname":"%s","time":%s,"price":%s,"count":%s}',
-                    item.itemname, item.time, item.price, item.count))
+            local listFields = {}
+            for k, v in pairs(item) do
+                local vv = v
+                if type(v) == 'boolean' then
+                    if v then vv = 'true' else vv = 'false' end
+                end
+                table.insert(listFields, format('"%s":"%s"', k, vv))
+            end
+
+            table.insert(list, format('{%s}', table.concat(listFields, ',')))
         end
         XBuyExport = format('[%s]', table.concat(list, ','))
         XBuyList = {}
@@ -95,9 +121,16 @@ local function export()
         local list = {}
         local count = #XSellList
         for _, item in ipairs(XSellList) do
-            table.insert(list,
-                format('{"itemname":"%s","time":%s,"issuccess":%s,"price":%s,"count":%s}',
-                    item.itemname, item.time, item.issuccess and 'true' or 'false', item.price, item.count))
+            local listFields = {}
+            for k, v in pairs(item) do
+                local vv = v
+                if type(v) == 'boolean' then
+                    if v then vv = 'true' else vv = 'false' end
+                end
+                table.insert(listFields, format('"%s":"%s"', k, vv))
+            end
+
+            table.insert(list, format('{%s}', table.concat(listFields, ',')))
         end
         XSellExport = format('[%s]', table.concat(list, ','))
         XSellList = {}
