@@ -49,22 +49,35 @@ local function import()
     end
 end
 
+local function fieldEncode(item)
+    local listFields = {}
+    for k, v in pairs(item) do
+        local valueType = type(v)
+        if valueType == 'number' then
+            table.insert(listFields, format('"%s":%s', k, v))
+        elseif valueType == 'boolean' then
+            if v then
+                table.insert(listFields, format('"%s":true', k))
+            else
+                table.insert(listFields, format('"%s":false', k))
+            end
+        else
+            table.insert(listFields, format('"%s":"%s"', k, v))
+        end
+    end
+    return table.concat(listFields, ',')
+end
+
+
 local function export()
     if not XItemUpdateList or XItemUpdateExport == '' or XItemUpdateExport == '[]' then
         local list = {}
         local count = 0
         for itemName, item in pairs(XItemUpdateList) do
             item.itemname = itemName
-            local listFields = {}
-            for k, v in pairs(item) do
-                local vv = v
-                if type(v) == 'boolean' then
-                    if v then vv = 'true' else vv = 'false' end
-                end
-                table.insert(listFields, format('"%s":"%s"', k, vv))
-            end
+            local fields = fieldEncode(item)
 
-            table.insert(list, format('{%s}', table.concat(listFields, ',')))
+            table.insert(list, format('{%s}', fields))
 
             count = count + 1
         end
@@ -79,16 +92,9 @@ local function export()
         for itemName, item in pairs(XScanList) do
             for _, record in ipairs(item['list']) do
                 record.itemname = itemName
-                local listFields = {}
-                for k, v in pairs(record) do
-                    local vv = v
-                    if type(v) == 'boolean' then
-                        if v then vv = 'true' else vv = 'false' end
-                    end
-                    table.insert(listFields, format('"%s":"%s"', k, vv))
-                end
+                local fields = fieldEncode(record)
 
-                table.insert(list, format('{%s}', table.concat(listFields, ',')))
+                table.insert(list, format('{%s}', fields))
                 count = count + 1
             end
         end
@@ -101,16 +107,8 @@ local function export()
         local list = {}
         local count = #XBuyList
         for _, item in ipairs(XBuyList) do
-            local listFields = {}
-            for k, v in pairs(item) do
-                local vv = v
-                if type(v) == 'boolean' then
-                    if v then vv = 'true' else vv = 'false' end
-                end
-                table.insert(listFields, format('"%s":"%s"', k, vv))
-            end
-
-            table.insert(list, format('{%s}', table.concat(listFields, ',')))
+            local fields = fieldEncode(item)
+            table.insert(list, format('{%s}', fields))
         end
         XBuyExport = format('[%s]', table.concat(list, ','))
         XBuyList = {}
@@ -121,16 +119,8 @@ local function export()
         local list = {}
         local count = #XSellList
         for _, item in ipairs(XSellList) do
-            local listFields = {}
-            for k, v in pairs(item) do
-                local vv = v
-                if type(v) == 'boolean' then
-                    if v then vv = 'true' else vv = 'false' end
-                end
-                table.insert(listFields, format('"%s":"%s"', k, vv))
-            end
-
-            table.insert(list, format('{%s}', table.concat(listFields, ',')))
+            local fields = fieldEncode(item)
+            table.insert(list, format('{%s}', fields))
         end
         XSellExport = format('[%s]', table.concat(list, ','))
         XSellList = {}
