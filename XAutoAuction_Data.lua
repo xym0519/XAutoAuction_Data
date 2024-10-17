@@ -1,9 +1,9 @@
-XAutoAuctionDataFrame = CreateFrame('Frame')
-XAutoAuctionData = {}
-local moduleName = 'XAutoAuctionData'
+XJewToolDataFrame = CreateFrame('Frame')
+XJewToolData = {}
+local moduleName = 'XJewToolData'
 
-XAuctionInfoList = {}
-XAuctionInfoListImport = ''
+XItemInfoList = {}
+XItemInfoListImport = ''
 
 XItemUpdateList = {}
 XItemUpdateExport = ''
@@ -17,7 +17,7 @@ XSellExport = ''
 XScanList = {}
 XScanExport = ''
 
-local function parseAuctionInfoObject(jsonStr)
+local function parseItemInfoObject(jsonStr)
     -- itemname, category, group
     local item = {}
     for k, v in jsonStr:gmatch('"([^"]+)":"([^"]*)"') do
@@ -31,20 +31,20 @@ local function parseAuctionInfoObject(jsonStr)
 end
 
 local function import()
-    if XAuctionInfoListImport ~= nil and XAuctionInfoListImport ~= '' then
+    if XItemInfoListImport ~= nil and XItemInfoListImport ~= '' then
         local results = {}
 
         -- 去除数组括号
-        local jsonStr = string.sub(XAuctionInfoListImport, 2, -2)
+        local jsonStr = string.sub(XItemInfoListImport, 2, -2)
         local count = 0
         for objectStr in jsonStr:gmatch("{(.-)}") do
-            local obj = parseAuctionInfoObject(objectStr)
+            local obj = parseItemInfoObject(objectStr)
             results[obj['itemname']] = obj
             count = count + 1
         end
-        XAuctionInfoList = results
-        XAuctionInfoListImport = ''
-        print('----------XAuctionInfoList----------')
+        XItemInfoList = results
+        XItemInfoListImport = ''
+        print('----------XItemInfoList----------')
         print(count .. ' items loaded.')
     end
 end
@@ -128,18 +128,18 @@ local function export()
     end
 end
 
-XAutoAuctionDataFrame:RegisterEvent('ADDON_LOADED')
+XJewToolDataFrame:RegisterEvent('ADDON_LOADED')
 
-XAutoAuctionDataFrame:SetScript('OnEvent', function(self, event, text, content)
+XJewToolDataFrame:SetScript('OnEvent', function(self, event, text, content)
     if event == 'ADDON_LOADED' then
-        if text == 'XAutoAuction_Data' then
+        if text == 'XJewTool_Data' then
             import()
         end
     end
 end)
 
 -- Commands
-SlashCmdList['XAUTOAUCTIONDATAEXPORT'] = function()
+SlashCmdList['XJEWTOOLATAEXPORT'] = function()
     export()
 end
-SLASH_XAUTOAUCTIONDATAEXPORT1 = '/xautoauctiondata_export'
+SLASH_XJEWTOOLDATAEXPORT1 = '/xjewtooldata_export'

@@ -1,8 +1,8 @@
 ## Interface: 40400
 ## Version: 1.0.0
-## Title: XAutoAuction_Data
+## Title: XJewTool_Data
 ## Author: Broche
 ## Notes: 自动拍卖数据(V3)
-## SavedVariables: XAuctionInfoList, XAuctionInfoListImport, XBuyList, XBuyExport, XSellList, XSellExport, XScanList, XScanExport, XItemUpdateList, XItemUpdateExport
+## SavedVariables: XItemInfoList, XItemInfoListImport, XBuyList, XBuyExport, XSellList, XSellExport, XScanList, XScanExport, XItemUpdateList, XItemUpdateExport
 
-XAutoAuction_Data.lua
+XJewTool_Data.lua
