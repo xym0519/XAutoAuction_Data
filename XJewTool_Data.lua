@@ -139,7 +139,7 @@ XJewToolDataFrame:SetScript('OnEvent', function(self, event, text, content)
 end)
 
 -- Commands
-SlashCmdList['XJEWTOOLATAEXPORT'] = function()
+SlashCmdList['XJEWTOOLDATAEXPORT'] = function()
     export()
 end
 SLASH_XJEWTOOLDATAEXPORT1 = '/xjewtooldata_export'
