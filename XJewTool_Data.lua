@@ -62,6 +62,7 @@ local function fieldEncode(item)
                 table.insert(listFields, format('"%s":false', k))
             end
         else
+            v = string.gsub(v, "\"", "")
             table.insert(listFields, format('"%s":"%s"', k, v))
         end
     end
